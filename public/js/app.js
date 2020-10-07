@@ -2070,9 +2070,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2099,6 +2096,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       addUser: false,
       editedIndex: -1,
       selected_user: '',
+      savedUser: {
+        id: '',
+        name: '',
+        email: ''
+      },
       form: {
         name: '',
         email: '',
@@ -2155,6 +2157,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context2.next = 2;
                 return axios.post('api/addUser', _this2.form).then(function (res) {
+                  _this2.savedUser.id = res.data.data['id'];
+                  _this2.savedUser.name = res.data.data['name'];
+                  _this2.savedUser.email = res.data.data['email'];
+
+                  _this2.users.push(_this2.savedUser);
+
                   _this2.addUser = false;
 
                   _this2.formReset();
@@ -9287,12 +9295,6 @@ var render = function() {
                 ],
                 1
               ),
-              _vm._v(" "),
-              _c("div", { staticClass: "float-right" }, [
-                _vm._v(
-                  "\n                    Float right on all viewport sizes\n                "
-                )
-              ]),
               _vm._v(" "),
               _c("v-data-table", {
                 attrs: {

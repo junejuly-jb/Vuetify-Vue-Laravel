@@ -38,9 +38,6 @@
                             </span>
                         </template>
                     </v-btn>
-                    <div class="float-right">
-                        Float right on all viewport sizes
-                    </div>
                     <v-data-table
                     :headers="headers"
                     :items="users"
@@ -165,6 +162,11 @@
         addUser: false,
         editedIndex: -1,
         selected_user: '',
+        savedUser: {
+            id: '',
+            name: '',
+            email: '',
+        },
         form: {
             name: '',
             email: '',
@@ -192,6 +194,10 @@
         async saveUser(){
             await axios.post('api/addUser', this.form)
             .then((res) => {
+                this.savedUser.id = res.data.data['id']
+                this.savedUser.name = res.data.data['name']
+                this.savedUser.email = res.data.data['email']
+                this.users.push(this.savedUser)
                 this.addUser = false
                 this.formReset()
             })
