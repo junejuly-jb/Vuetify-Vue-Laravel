@@ -29,7 +29,8 @@ class ApiController extends Controller
 
         $user->save();
         return response()->json([
-            'message' => 'User added!'
+            'message' => 'User added!',
+            'data' => $user
         ]);
     }
 }
