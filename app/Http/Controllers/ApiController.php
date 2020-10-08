@@ -33,4 +33,15 @@ class ApiController extends Controller
             'data' => $user
         ]);
     }
+    public function editUser(Request $request, $id){
+        $user = User::find($id);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        $user->save();
+        return response()->json([
+            'message' => 'User edited!'
+        ]);
+    }
 }

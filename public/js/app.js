@@ -2070,10 +2070,63 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       search: '',
+      edit_Dialog: false,
       headers: [{
         text: 'ID Number',
         align: 'start',
@@ -2096,7 +2149,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       addUser: false,
       editedIndex: -1,
       selected_user: '',
+      userDefault: {
+        id: '',
+        name: '',
+        email: ''
+      },
       savedUser: {
+        id: '',
+        name: '',
+        email: ''
+      },
+      editedUser: {
         id: '',
         name: '',
         email: ''
@@ -2126,6 +2189,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   methods: {
+    editUser: function editUser(item) {
+      this.edit_Dialog = true;
+      this.editedIndex = this.users.indexOf(item);
+      this.editedUser.name = item.name;
+      this.editedUser.email = item.email;
+      this.editedUser.id = item.id; // console.log(this.editedUser)
+    },
     getAllUsers: function getAllUsers() {
       var _this = this;
 
@@ -2150,31 +2220,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     saveUser: function saveUser() {
       var _this2 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.next = 2;
-                return axios.post('api/addUser', _this2.form).then(function (res) {
-                  _this2.savedUser.id = res.data.data['id'];
-                  _this2.savedUser.name = res.data.data['name'];
-                  _this2.savedUser.email = res.data.data['email'];
+      if (this.editedIndex > -1) {
+        axios.put('api/editUser/' + this.editedUser.id, this.editedUser).then(function (res) {
+          Object.assign(_this2.users[_this2.editedIndex], _this2.editedUser);
+          _this2.editedIndex = -1;
+          _this2.edit_Dialog = false;
+          _this2.editedUser = _this2.userDefault;
+          console.log(_this2.editedUser);
+        })["catch"](function (err) {
+          console.log(err);
+        });
+      } else {
+        axios.post('api/addUser', this.form).then(function (res) {
+          _this2.savedUser.id = res.data.data['id'];
+          _this2.savedUser.name = res.data.data['name'];
+          _this2.savedUser.email = res.data.data['email'];
 
-                  _this2.users.push(_this2.savedUser);
+          _this2.users.push(_this2.savedUser);
 
-                  _this2.addUser = false;
+          _this2.addUser = false;
 
-                  _this2.formReset();
-                });
-
-              case 2:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }))();
+          _this2.formReset();
+        });
+      }
     },
     deleteUser: function deleteUser(item) {
       this.editedIndex = this.users.indexOf(item);
@@ -2185,25 +2253,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     deleteItemConfirm: function deleteItemConfirm() {
       var _this3 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _context3.next = 2;
+                _context2.next = 2;
                 return axios["delete"]('api/delete/' + _this3.selected_user).then(function (res) {
                   _this3.users.splice(_this3.editedIndex, 1);
 
                   console.log(res.data.message);
                   _this3.testDialog = false;
+                  _this3.editedIndex = -1;
                 });
 
               case 2:
               case "end":
-                return _context3.stop();
+                return _context2.stop();
             }
           }
-        }, _callee3);
+        }, _callee2);
       }))();
     },
     formReset: function formReset() {
@@ -2602,7 +2671,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.custom-loader[data-v-299e239e] {\n  -webkit-animation: loader-data-v-299e239e 1s infinite;\n          animation: loader-data-v-299e239e 1s infinite;\n  display: flex;\n}\n@-webkit-keyframes loader-data-v-299e239e {\nfrom {\n    transform: rotate(0);\n}\nto {\n    transform: rotate(360deg);\n}\n}\n@keyframes loader-data-v-299e239e {\nfrom {\n    transform: rotate(0);\n}\nto {\n    transform: rotate(360deg);\n}\n}\n", ""]);
+exports.push([module.i, "\n.custom-loader[data-v-299e239e] {\n  -webkit-animation: loader-data-v-299e239e 1s infinite;\n          animation: loader-data-v-299e239e 1s infinite;\n  display: flex;\n}\n@-webkit-keyframes loader-data-v-299e239e {\nfrom {\n    transform: rotate(360deg);\n}\nto {\n    transform: rotate(0);\n}\n}\n@keyframes loader-data-v-299e239e {\nfrom {\n    transform: rotate(360deg);\n}\nto {\n    transform: rotate(0);\n}\n}\n", ""]);
 
 // exports
 
@@ -9365,7 +9434,9 @@ var render = function() {
                     )
                   ]),
                   _vm._v(" "),
-                  _c("v-card-text"),
+                  _c("v-card-text", [
+                    _vm._v("You will not revert this action!")
+                  ]),
                   _vm._v(" "),
                   _c(
                     "v-card-actions",
@@ -9375,8 +9446,12 @@ var render = function() {
                       _c(
                         "v-btn",
                         {
-                          attrs: { color: "green darken-1", text: "" },
-                          on: { click: _vm.testDialog }
+                          attrs: { color: "", text: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.testDialog = false
+                            }
+                          }
                         },
                         [
                           _vm._v(
@@ -9388,12 +9463,121 @@ var render = function() {
                       _c(
                         "v-btn",
                         {
-                          attrs: { color: "green darken-1", text: "" },
+                          attrs: { color: "red", text: "" },
                           on: { click: _vm.deleteItemConfirm }
                         },
                         [
                           _vm._v(
                             "\n                        Agree\n                    "
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-dialog",
+            {
+              attrs: { persistent: "", "max-width": "500" },
+              model: {
+                value: _vm.edit_Dialog,
+                callback: function($$v) {
+                  _vm.edit_Dialog = $$v
+                },
+                expression: "edit_Dialog"
+              }
+            },
+            [
+              _c(
+                "v-card",
+                [
+                  _c("v-card-title", { staticClass: "headline" }, [
+                    _vm._v(
+                      "\n                    Edit Admininistrator\n                    "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "v-container",
+                    [
+                      _c(
+                        "v-form",
+                        [
+                          _c("v-text-field", {
+                            attrs: {
+                              rules: _vm.rules.name,
+                              label: "Enter name",
+                              clearable: ""
+                            },
+                            model: {
+                              value: _vm.editedUser.name,
+                              callback: function($$v) {
+                                _vm.$set(_vm.editedUser, "name", $$v)
+                              },
+                              expression: "editedUser.name"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("v-text-field", {
+                            attrs: {
+                              rules: _vm.emailRules,
+                              label: "Enter Email Address",
+                              hint: "Email must contains '@'",
+                              clearable: ""
+                            },
+                            model: {
+                              value: _vm.editedUser.email,
+                              callback: function($$v) {
+                                _vm.$set(_vm.editedUser, "email", $$v)
+                              },
+                              expression: "editedUser.email"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-actions",
+                    [
+                      _c("v-spacer"),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "error", text: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.edit_Dialog = false
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        Cancel\n                    "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "info", text: "" },
+                          on: { click: _vm.saveUser }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        Save\n                    "
                           )
                         ]
                       )
@@ -65926,14 +66110,15 @@ var app = new Vue({
 /*!******************************************************!*\
   !*** ./resources/js/components/ExampleComponent.vue ***!
   \******************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ExampleComponent_vue_vue_type_template_id_299e239e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ExampleComponent.vue?vue&type=template&id=299e239e&scoped=true& */ "./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&scoped=true&");
 /* harmony import */ var _ExampleComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ExampleComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _ExampleComponent_vue_vue_type_style_index_0_id_299e239e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ExampleComponent.vue?vue&type=style&index=0&id=299e239e&scoped=true&lang=css& */ "./resources/js/components/ExampleComponent.vue?vue&type=style&index=0&id=299e239e&scoped=true&lang=css&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _ExampleComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _ExampleComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _ExampleComponent_vue_vue_type_style_index_0_id_299e239e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ExampleComponent.vue?vue&type=style&index=0&id=299e239e&scoped=true&lang=css& */ "./resources/js/components/ExampleComponent.vue?vue&type=style&index=0&id=299e239e&scoped=true&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -65965,7 +66150,7 @@ component.options.__file = "resources/js/components/ExampleComponent.vue"
 /*!*******************************************************************************!*\
   !*** ./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js& ***!
   \*******************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
