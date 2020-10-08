@@ -2122,10 +2122,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       search: '',
+      snackbar: false,
+      timeout: 2000,
+      message: '',
       edit_Dialog: false,
       headers: [{
         text: 'ID Number',
@@ -2194,7 +2218,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.editedIndex = this.users.indexOf(item);
       this.editedUser.name = item.name;
       this.editedUser.email = item.email;
-      this.editedUser.id = item.id; // console.log(this.editedUser)
+      this.editedUser.id = item.id;
+      console.log(this.editedUser);
     },
     getAllUsers: function getAllUsers() {
       var _this = this;
@@ -2223,6 +2248,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (this.editedIndex > -1) {
         axios.put('api/editUser/' + this.editedUser.id, this.editedUser).then(function (res) {
           Object.assign(_this2.users[_this2.editedIndex], _this2.editedUser);
+          _this2.snackbar = true;
+          _this2.message = res.data.message;
           _this2.editedIndex = -1;
           _this2.edit_Dialog = false;
           _this2.editedUser = _this2.userDefault;
@@ -2232,15 +2259,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
       } else {
         axios.post('api/addUser', this.form).then(function (res) {
+          _this2.snackbar = true;
+          _this2.message = res.data.message;
           _this2.savedUser.id = res.data.data['id'];
           _this2.savedUser.name = res.data.data['name'];
           _this2.savedUser.email = res.data.data['email'];
 
           _this2.users.push(_this2.savedUser);
 
-          _this2.addUser = false;
-
-          _this2.formReset();
+          _this2.addUser = false; // this.formReset()
         });
       }
     },
@@ -2262,7 +2289,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return axios["delete"]('api/delete/' + _this3.selected_user).then(function (res) {
                   _this3.users.splice(_this3.editedIndex, 1);
 
-                  console.log(res.data.message);
+                  _this3.snackbar = true;
+                  _this3.message = res.data.data['name'] + " " + res.data.message;
                   _this3.testDialog = false;
                   _this3.editedIndex = -1;
                 });
@@ -9725,6 +9753,65 @@ var render = function() {
                   )
                 ],
                 1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "text-center" },
+            [
+              _c(
+                "v-snackbar",
+                {
+                  attrs: { timeout: _vm.timeout },
+                  scopedSlots: _vm._u([
+                    {
+                      key: "action",
+                      fn: function(ref) {
+                        var attrs = ref.attrs
+                        return [
+                          _c(
+                            "v-btn",
+                            _vm._b(
+                              {
+                                attrs: { color: "blue", text: "" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.snackbar = false
+                                  }
+                                }
+                              },
+                              "v-btn",
+                              attrs,
+                              false
+                            ),
+                            [
+                              _vm._v(
+                                "\n                        Close\n                        "
+                              )
+                            ]
+                          )
+                        ]
+                      }
+                    }
+                  ]),
+                  model: {
+                    value: _vm.snackbar,
+                    callback: function($$v) {
+                      _vm.snackbar = $$v
+                    },
+                    expression: "snackbar"
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.message) +
+                      "\n\n                    "
+                  )
+                ]
               )
             ],
             1
