@@ -21,3 +21,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/users', 'App\Http\Controllers\ApiController@getAllUsers');
 Route::delete('/delete/{id}', 'App\Http\Controllers\ApiController@delete');
 Route::post('/addUser', 'App\Http\Controllers\ApiController@addUser');
+Route::put('/editUser/{id}', 'App\Http\Controllers\ApiController@editUser');

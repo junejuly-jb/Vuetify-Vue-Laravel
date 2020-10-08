@@ -50,7 +50,7 @@
                     </v-data-table>
                 </v-card>
 
-
+                <!-- Delete dialog for confirmation -->
                 <v-dialog
                 v-model="testDialog"
                 persistent
@@ -60,18 +60,18 @@
                         <v-card-title class="headline">
                         Delete this item?
                         </v-card-title>
-                        <v-card-text></v-card-text>
+                        <v-card-text>You will not revert this action!</v-card-text>
                         <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn
-                            color="green darken-1"
+                            color=""
                             text
-                            @click="testDialog"
+                            @click="testDialog = false"
                         >
                             Disagree
                         </v-btn>
                         <v-btn
-                            color="green darken-1"
+                            color="red"
                             text
                             @click="deleteItemConfirm"
                         >
@@ -80,6 +80,57 @@
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
+                <!-- END Delete dialog for confirmation -->
+
+
+                <!-- edit dialog -->
+                <v-dialog
+                v-model="edit_Dialog"
+                persistent
+                max-width="500"
+                >
+                    <v-card>
+                        <v-card-title class="headline">
+                        Edit Admininistrator
+                        </v-card-title>
+                        <v-container>
+                            <v-form>
+                            <v-text-field
+                                v-model="editedUser.name"
+                                :rules="rules.name"
+                                label="Enter name"
+                                clearable
+                            ></v-text-field>
+                            <v-text-field
+                                v-model="editedUser.email"
+                                :rules="emailRules"
+                                label="Enter Email Address"
+                                hint="Email must contains '@'"
+                                clearable
+                            ></v-text-field>
+                            </v-form>
+                        </v-container>
+                        <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            color="error"
+                            text
+                            @click="edit_Dialog = false"
+                        >
+                            Cancel
+                        </v-btn>
+                        <v-btn
+                            color="info"
+                            text
+                            @click="saveUser"
+                        >
+                            Save
+                        </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <!-- end edit dialog  -->
+                <!-- add dialog  -->
                 <v-dialog
                 v-model="addUser"
                 persistent
@@ -137,6 +188,7 @@
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
+                <!-- add dialog end -->
         </v-container>
     </v-app>
 </template>
@@ -145,6 +197,7 @@
     data () {
       return {
         search: '',
+        edit_Dialog: false,
         headers: [
           {
             text: 'ID Number',
@@ -162,7 +215,17 @@
         addUser: false,
         editedIndex: -1,
         selected_user: '',
+        userDefault: {
+            id: '',
+            name: '',
+            email: ''
+        },
         savedUser: {
+            id: '',
+            name: '',
+            email: '',
+        },
+        editedUser: {
             id: '',
             name: '',
             email: '',
@@ -185,22 +248,47 @@
       }
     },
     methods: {
+        editUser(item){
+            this.edit_Dialog = true;
+            this.editedIndex = this.users.indexOf(item)
+            this.editedUser.name = item.name
+            this.editedUser.email = item.email
+            this.editedUser.id = item.id
+
+            // console.log(this.editedUser)
+        },
         async getAllUsers(){
             await axios.get('api/users')
             .then((res) => {
                 this.users = res.data
             })
         },
-        async saveUser(){
-            await axios.post('api/addUser', this.form)
-            .then((res) => {
-                this.savedUser.id = res.data.data['id']
-                this.savedUser.name = res.data.data['name']
-                this.savedUser.email = res.data.data['email']
-                this.users.push(this.savedUser)
-                this.addUser = false
-                this.formReset()
-            })
+        saveUser(){
+            if(this.editedIndex > -1){
+                axios.put('api/editUser/' + this.editedUser.id, this.editedUser)
+                .then((res) => {
+                    Object.assign(this.users[this.editedIndex], this.editedUser)
+                    this.editedIndex = -1
+                    this.edit_Dialog = false
+                    this.editedUser =  this.userDefault
+                    console.log(this.editedUser)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+            }
+            else{
+                axios.post('api/addUser', this.form)
+                .then((res) => {
+                    this.savedUser.id = res.data.data['id']
+                    this.savedUser.name = res.data.data['name']
+                    this.savedUser.email = res.data.data['email']
+                    this.users.push(this.savedUser)
+                    this.addUser = false
+                    this.formReset()
+                })
+            }
+            
         },
         deleteUser(item){
             this.editedIndex = this.users.indexOf(item)
@@ -214,6 +302,7 @@
                 this.users.splice(this.editedIndex, 1)
                 console.log(res.data.message)
                 this.testDialog = false
+                this.editedIndex = -1
             })
         },
         formReset(){
@@ -248,34 +337,34 @@
   }
   @-moz-keyframes loader {
     from {
-      transform: rotate(0);
+      transform: rotate(360deg);
     }
     to {
-      transform: rotate(360deg);
+      transform: rotate(0);
     }
   }
   @-webkit-keyframes loader {
     from {
-      transform: rotate(0);
+      transform: rotate(360deg);
     }
     to {
-      transform: rotate(360deg);
+      transform: rotate(0);
     }
   }
   @-o-keyframes loader {
     from {
-      transform: rotate(0);
+      transform: rotate(360deg);
     }
     to {
-      transform: rotate(360deg);
+      transform: rotate(0);
     }
   }
   @keyframes loader {
     from {
-      transform: rotate(0);
+      transform: rotate(360deg);
     }
     to {
-      transform: rotate(360deg);
+      transform: rotate(0);
     }
   }
 </style>
