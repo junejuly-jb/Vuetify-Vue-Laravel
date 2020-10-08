@@ -189,6 +189,27 @@
                     </v-card>
                 </v-dialog>
                 <!-- add dialog end -->
+                <!-- snackbar  -->
+                    <div class="text-center">
+                        <v-snackbar
+                        v-model="snackbar"
+                        :timeout="timeout"
+                        >
+                        {{ message }}
+
+                        <template v-slot:action="{ attrs }">
+                            <v-btn
+                            color="blue"
+                            text
+                            v-bind="attrs"
+                            @click="snackbar = false"
+                            >
+                            Close
+                            </v-btn>
+                        </template>
+                        </v-snackbar>
+                    </div>
+                <!-- end snackbar -->
         </v-container>
     </v-app>
 </template>
@@ -197,6 +218,9 @@
     data () {
       return {
         search: '',
+        snackbar: false,
+        timeout: 2000,
+        message: '',
         edit_Dialog: false,
         headers: [
           {
@@ -255,7 +279,7 @@
             this.editedUser.email = item.email
             this.editedUser.id = item.id
 
-            // console.log(this.editedUser)
+            console.log(this.editedUser)
         },
         async getAllUsers(){
             await axios.get('api/users')
@@ -268,6 +292,8 @@
                 axios.put('api/editUser/' + this.editedUser.id, this.editedUser)
                 .then((res) => {
                     Object.assign(this.users[this.editedIndex], this.editedUser)
+                    this.snackbar = true
+                    this.message = res.data.message
                     this.editedIndex = -1
                     this.edit_Dialog = false
                     this.editedUser =  this.userDefault
@@ -280,12 +306,14 @@
             else{
                 axios.post('api/addUser', this.form)
                 .then((res) => {
+                    this.snackbar = true
+                    this.message = res.data.message
                     this.savedUser.id = res.data.data['id']
                     this.savedUser.name = res.data.data['name']
                     this.savedUser.email = res.data.data['email']
                     this.users.push(this.savedUser)
                     this.addUser = false
-                    this.formReset()
+                    // this.formReset()
                 })
             }
             
@@ -300,7 +328,8 @@
             await axios.delete('api/delete/' + this.selected_user)
             .then((res) => {
                 this.users.splice(this.editedIndex, 1)
-                console.log(res.data.message)
+                this.snackbar = true
+                this.message = res.data.data['name'] + " " + res.data.message
                 this.testDialog = false
                 this.editedIndex = -1
             })
